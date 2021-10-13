@@ -23,7 +23,7 @@ runs:
 
       - name: Check renv
         run: |
-          ls -la ${{ inputs.working-dir }}/renv
+          ls -la ${{ inputs.working-dir }}
         shell: bash
 
       - name: Check if lockfile exist
