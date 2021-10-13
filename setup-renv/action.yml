@@ -25,6 +25,7 @@ runs:
               echo "$FILE does not exist."
               exit 1
           fi
+        shell: bash
 
       - name: Install renv
         run: |
