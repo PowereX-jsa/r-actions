@@ -1,6 +1,10 @@
 name: 'setup-renv'
 description: 'Action to setup renv and install R dependencies in the lockfile'
 author: 'patrik.beka@powerex.io'
+inputs:
+  working-dir:
+    description: 'Working directory with source codes and renv.lock file'
+    required: true
 
 runs:
   using: "composite"
@@ -11,11 +15,16 @@ runs:
       # check renv.lock
       # renv version
 
-      - name: Get R version
-        id: get-version
+      - name: Check if lockfile exist
         run: |
-          cat("##[set-output name=r-version;]", R.Version()$version.string, sep = "")
-        shell: Rscript {0}
+          FILE=${{ inputs.working-dir }}/renv.lock
+
+          if [ -f "$FILE" ]; then
+              echo "$FILE found."
+          else
+              echo "$FILE does not exist."
+              exit 1
+          fi
 
       - name: Install renv
         run: |
