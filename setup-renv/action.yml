@@ -50,6 +50,10 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
-
           renv::restore(project = "${{ inputs.working-dir }}", library = "${{ inputs.working-dir }}/renv", clean = TRUE)
         shell: Rscript {0}
+
+      - name: List installed packages
+        run: |
+          ls -la "${{ inputs.working-dir }}/renv"
+        shell: bash
