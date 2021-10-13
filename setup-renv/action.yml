@@ -14,10 +14,12 @@ runs:
   using: "composite"
   steps:
 
-      # TODO
-      # check work dir
-      # check renv.lock
-      # renv version
+      - name: Restore Renv package cache
+        uses: actions/cache@v2
+        with:
+          path: "${{ inputs.working-dir }}/renv"
+          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles("${{ inputs.working-dir }}/renv.lock") }}
+          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Check if lockfile exist
         run: |
@@ -44,10 +46,3 @@ runs:
 
           renv::restore()
         shell: Rscript {0}
-
-      - name: Restore Renv package cache
-        uses: actions/cache@v2
-        with:
-          path: $HOME/.local/share/renv
-          key: ${{ runner.os }}-renv-${{ hashFiles('renv.lock') }}
-          restore-keys: ${{ runner.os }}-renv-
