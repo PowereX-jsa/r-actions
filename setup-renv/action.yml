@@ -33,7 +33,12 @@ runs:
         shell: Rscript {0}
 
       - name: Install dependencies from lockfile
-        run: renv::restore()
+        run: |
+          setwd("${{ inputs.working-dir }}")
+
+          getwd()
+
+          renv::restore()
         shell: Rscript {0}
 
       - name: Restore Renv package cache
