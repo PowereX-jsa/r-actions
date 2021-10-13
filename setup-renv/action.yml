@@ -19,12 +19,13 @@ runs:
           install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
         shell: Rscript {0}
 
+      # workaround for caching renv global lib directory
       - name: Get and set global renv library dir
         run: |
           renv_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
 
           # set path as env variable
-          system(paste0("echo 'RENV_LIB=", lib_path, "' >> $GITHUB_ENV"))
+          system(paste0("echo 'RENV_LIB=", renv_lib_path, "' >> $GITHUB_ENV"))
         shell: Rscript {0}
 
       - name: Show used renv library path
