@@ -5,6 +5,10 @@ inputs:
   working-dir:
     description: 'Working directory with source codes and renv.lock file'
     required: true
+  renv-version:
+    description: 'Version of renv package'
+    required: false
+    default: 0.13.0
 
 runs:
   using: "composite"
@@ -29,7 +33,7 @@ runs:
 
       - name: Install renv
         run: |
-          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_0.13.0.tar.gz", repos=NULL, type="source")
+          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
         shell: Rscript {0}
 
       - name: Install dependencies from lockfile
