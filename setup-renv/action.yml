@@ -1,0 +1,31 @@
+name: 'setup-renv'
+description: 'Action to setup renv and install R dependencies in the lockfile'
+author: 'patrik.beka@powerex.io'
+
+runs:
+  using: "composite"
+  steps:
+
+      # TODO 
+      # check work dir
+      # check renv.lock
+      # renv version
+
+      - name: Get R version
+        id: get-version
+        run: |
+          cat("##[set-output name=r-version;]", R.Version()$version.string, sep = "")
+        shell: Rscript {0}
+
+      - name: Install renv
+        run: |
+          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_0.13.0.tar.gz", repos=NULL, type="source")
+        shell: Rscript {0}
+
+      - name: Restore Renv package cache
+        uses: actions/cache@v2
+        with:
+          path: $HOME/.local/share/renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('renv.lock') }}
+          restore-keys: ${{ runner.os }}-renv-
+
