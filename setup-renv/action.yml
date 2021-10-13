@@ -24,7 +24,7 @@ runs:
           renv_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
 
           # set path as env variable
-          system(paste0("echo 'RENV_LIB=", lib_path, "' >> $GITHUB_ENV))
+          system(paste0("echo 'RENV_LIB=", lib_path, "' >> $GITHUB_ENV"))
         shell: Rscript {0}
 
       - name: Show used renv library path
