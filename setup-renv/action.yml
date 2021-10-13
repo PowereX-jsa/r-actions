@@ -6,7 +6,7 @@ runs:
   using: "composite"
   steps:
 
-      # TODO 
+      # TODO
       # check work dir
       # check renv.lock
       # renv version
@@ -22,10 +22,13 @@ runs:
           install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_0.13.0.tar.gz", repos=NULL, type="source")
         shell: Rscript {0}
 
+      - name: Install dependencies from lockfile
+        run: renv::restore()
+        shell: Rscript {0}
+
       - name: Restore Renv package cache
         uses: actions/cache@v2
         with:
           path: $HOME/.local/share/renv
           key: ${{ runner.os }}-renv-${{ hashFiles('renv.lock') }}
           restore-keys: ${{ runner.os }}-renv-
-
