@@ -21,6 +21,11 @@ runs:
           key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
           restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
+      - name: Check renv
+        run: |
+          ls -la ${{ inputs.working-dir }}/renv
+        shell: bash
+
       - name: Check if lockfile exist
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
@@ -40,9 +45,6 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
-          setwd("${{ inputs.working-dir }}")
 
-          getwd()
-
-          renv::restore()
+          renv::restore(project = "${{ inputs.working-dir }}", library = "${{ inputs.working-dir }}/renv", clean = TRUE)
         shell: Rscript {0}
