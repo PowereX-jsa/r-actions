@@ -18,7 +18,7 @@ runs:
         uses: actions/cache@v2
         with:
           path: "${{ inputs.working-dir }}/renv"
-          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles("${{ inputs.working-dir }}/renv.lock") }}
+          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles('${{ inputs.working-dir }}/renv.lock') }}
           restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Check if lockfile exist
