@@ -14,27 +14,30 @@ runs:
   using: "composite"
   steps:
 
-      - name: Default site library check
+      - name: Install renv
         run: |
-          ls -la "$R_HOME"
-        shell: bash
+          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
+        shell: Rscript {0}
 
-      - name: Default site library check
+      - name: Get and set global renv library dir
         run: |
-          ls -la "$R_HOME/site-library"
+          renv_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
+
+          # set path as env variable
+          system(paste0("echo 'RENV_LIB=", lib_path, "' >> $GITHUB_ENV))
+        shell: Rscript {0}
+
+      - name: Show used renv library path
+        run: |
+          echo "renv library path: ${{ env.RENV_LIB }}"
         shell: bash
 
       - name: Restore Renv package cache
         uses: actions/cache@v2
         with:
-          path: "$R_HOME"
+          path: "${{ env.RENV_LIB }}"
           key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
           restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
-
-      - name: Check renv
-        run: |
-          ls -la ${{ inputs.working-dir }}
-        shell: bash
 
       - name: Check if lockfile exist
         run: |
@@ -48,11 +51,6 @@ runs:
           fi
         shell: bash
 
-      - name: Install renv
-        run: |
-          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
-        shell: Rscript {0}
-
       - name: Install dependencies from lockfile
         run: |
           renv::restore(project = "${{ inputs.working-dir }}")
@@ -60,10 +58,5 @@ runs:
 
       - name: List installed packages
         run: |
-          ls -la "${{ inputs.working-dir }}"
-        shell: bash
-
-      - name: List installed packages
-        run: |
-          ls -la "$R_HOME"
+          ls -la "${{ env.RENV_LIB }}"
         shell: bash
