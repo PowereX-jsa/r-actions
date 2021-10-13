@@ -14,21 +14,26 @@ runs:
   using: "composite"
   steps:
 
+      - name: Default site library check
+        run: |
+          ls -la "$R_HOME"
+        shell: bash
+
+      - name: Default site library check
+        run: |
+          ls -la "$R_HOME/site-library"
+        shell: bash
+
       - name: Restore Renv package cache
         uses: actions/cache@v2
         with:
-          path: "${{ inputs.working-dir }}/renv"
+          path: "$R_HOME"
           key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
           restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Check renv
         run: |
           ls -la ${{ inputs.working-dir }}
-        shell: bash
-
-      - name: Check renv
-        run: |
-          ls -la .
         shell: bash
 
       - name: Check if lockfile exist
@@ -50,11 +55,15 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
-          renv::activate(project = "${{ inputs.working-dir }}")
           renv::restore(project = "${{ inputs.working-dir }}")
         shell: Rscript {0}
 
       - name: List installed packages
         run: |
-          ls -la "${{ inputs.working-dir }}/renv"
+          ls -la "${{ inputs.working-dir }}"
+        shell: bash
+
+      - name: List installed packages
+        run: |
+          ls -la "$R_HOME"
         shell: bash
