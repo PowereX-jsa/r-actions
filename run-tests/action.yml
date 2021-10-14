@@ -40,8 +40,7 @@ runs:
 
     - name: Publish Test Results
       uses: mikepenz/action-junit-report@v2
-      # if: always() # always run even if the previous step fails
+      if: always() # always run even if the previous step fails
       with:
-        # token: ${{ secrets.GITHUB_TOKEN }}
         report_paths: '${{ inputs.test-dir }}/**/*.xml'
         fail_on_failure: true
