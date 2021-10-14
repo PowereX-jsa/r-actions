@@ -1,0 +1,35 @@
+name: 'run-tests'
+description: 'Action for running testthat tests in specific directory'
+author: 'patrik.beka@powerex.io'
+inputs:
+  test-dir:
+    description: 'Directory with tests'
+    required: true
+  testthat-version:
+    description: 'Version of testthat package'
+    required: false
+    default: 3.0.2
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Install testthat
+      run: |
+        if ("testthat" %in% rownames(installed.packages()) && packageVersion("testthat") == "${{ inputs.testthat-version }}") {
+          print("testthat in version: ${{ inputs.testthat-version }} already installed")
+        } else {
+          install.packages("https://cran.r-project.org/src/contrib/Archive/testthat/testthat_${{ inputs.testthat-version }}.tar.gz", repos=NULL, type="source")
+        }
+      shell: Rscript {0}
+
+    - name: Run tests
+      run: |
+        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
+      shell: Rscript {0}
+
+    - name: Publish Test Results
+      uses: mikepenz/action-junit-report@v2
+      with:
+        report_paths: '${{ inputs.test-dir }}/**/*.xml'
+        fail_on_failure: true
