@@ -14,9 +14,23 @@ runs:
   using: "composite"
   steps:
 
+    - name: folder
+      run: |
+        pwd
+      shell: bash
+
+    - name: folder
+      run: |
+        ls -la
+      shell: bash
+
     - name: Install testthat
       run: |
-        install.packages("https://cran.r-project.org/src/contrib/Archive/testthat/testthat_${{ inputs.testthat-version }}.tar.gz", repos=NULL, type="source")
+        if ("testthat" %in% rownames(installed.packages()) && packageVersion("testthat") == ${{ inputs.testthat-version }}) {
+          print("testthat in version: ${{ inputs.testthat-version }} already installed")
+        } else {
+          install.packages("https://cran.r-project.org/src/contrib/Archive/testthat/testthat_${{ inputs.testthat-version }}.tar.gz", repos=NULL, type="source")
+        }
       shell: Rscript {0}
 
     - name: Run tests
