@@ -1,0 +1,29 @@
+name: 'run-tests'
+description: 'Action for running testthat tests in specific directory'
+author: 'patrik.beka@powerex.io'
+inputs:
+  test-dir:
+    description: 'Directory with tests'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+      - name: Install testthat
+        run: |
+          install.packages("testthat")
+        shell: Rscript {0}
+
+      - name: Run tests
+        run: |
+          testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = JunitReporter$new(file = "${{ inputs.test-dir }}/junit_result.xml"))
+        shell: Rscript {0}
+
+    - name: Publish Test Results
+      uses: mikepenz/action-junit-report@v2
+      if: always() # always run even if the previous step fails
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        report_paths: '${{ inputs.test-dir }}/**/*.xml'
+        fail_on_failure: true
