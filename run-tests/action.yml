@@ -26,7 +26,7 @@ runs:
 
     - name: Install testthat
       run: |
-        if ("testthat" %in% rownames(installed.packages()) && packageVersion("testthat") == ${{ inputs.testthat-version }}) {
+        if ("testthat" %in% rownames(installed.packages()) && packageVersion("testthat") == "${{ inputs.testthat-version }}") {
           print("testthat in version: ${{ inputs.testthat-version }} already installed")
         } else {
           install.packages("https://cran.r-project.org/src/contrib/Archive/testthat/testthat_${{ inputs.testthat-version }}.tar.gz", repos=NULL, type="source")
