@@ -1,31 +1,63 @@
 name: 'setup-renv'
 description: 'Action to setup renv and install R dependencies in the lockfile'
 author: 'patrik.beka@powerex.io'
+inputs:
+  working-dir:
+    description: 'Working directory with source codes and renv.lock file'
+    required: true
+  renv-version:
+    description: 'Version of renv package'
+    required: false
+    default: 0.13.0
 
 runs:
   using: "composite"
   steps:
 
-      # TODO 
-      # check work dir
-      # check renv.lock
-      # renv version
-
-      - name: Get R version
-        id: get-version
-        run: |
-          cat("##[set-output name=r-version;]", R.Version()$version.string, sep = "")
-        shell: Rscript {0}
-
       - name: Install renv
         run: |
-          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_0.13.0.tar.gz", repos=NULL, type="source")
+          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
         shell: Rscript {0}
+
+      # workaround for caching renv global lib directory
+      - name: Get and set global renv library dir
+        run: |
+          renv_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
+
+          # set path as env variable
+          system(paste0("echo 'RENV_LIB=", renv_lib_path, "' >> $GITHUB_ENV"))
+        shell: Rscript {0}
+
+      - name: Show used renv library path
+        run: |
+          echo "renv library path: ${{ env.RENV_LIB }}"
+        shell: bash
 
       - name: Restore Renv package cache
         uses: actions/cache@v2
         with:
-          path: $HOME/.local/share/renv
-          key: ${{ runner.os }}-renv-${{ hashFiles('renv.lock') }}
-          restore-keys: ${{ runner.os }}-renv-
+          path: "${{ env.RENV_LIB }}"
+          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
+          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
+      - name: Check if lockfile exist
+        run: |
+          FILE=${{ inputs.working-dir }}/renv.lock
+
+          if [ -f "$FILE" ]; then
+              echo "$FILE found."
+          else
+              echo "$FILE does not exist."
+              exit 1
+          fi
+        shell: bash
+
+      - name: Install dependencies from lockfile
+        run: |
+          renv::restore(project = "${{ inputs.working-dir }}")
+        shell: Rscript {0}
+
+      - name: List installed packages
+        run: |
+          ls -la "${{ env.RENV_LIB }}"
+        shell: bash
