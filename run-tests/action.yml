@@ -5,6 +5,10 @@ inputs:
   test-dir:
     description: 'Directory with tests'
     required: true
+  testthat-version:
+    description: 'Version of testthat package'
+    required: false
+    default: 3.0.2
 
 runs:
   using: "composite"
@@ -12,12 +16,12 @@ runs:
 
     - name: Install testthat
       run: |
-        install.packages("testthat")
+        install.packages("https://cran.r-project.org/src/contrib/Archive/testthat/testthat_${{ inputs.testthat-version }}.tar.gz", repos=NULL, type="source")
       shell: Rscript {0}
 
     - name: Run tests
       run: |
-        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = JunitReporter$new(file = "${{ inputs.test-dir }}/junit_result.xml"))
+        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = testthat::JunitReporter$new(file = "${{ inputs.test-dir }}/junit_result.xml"))
       shell: Rscript {0}
 
     - name: Publish Test Results
