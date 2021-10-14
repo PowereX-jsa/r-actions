@@ -14,16 +14,6 @@ runs:
   using: "composite"
   steps:
 
-    - name: folder
-      run: |
-        pwd
-      shell: bash
-
-    - name: folder
-      run: |
-        ls -la
-      shell: bash
-
     - name: Install testthat
       run: |
         if ("testthat" %in% rownames(installed.packages()) && packageVersion("testthat") == "${{ inputs.testthat-version }}") {
@@ -40,7 +30,6 @@ runs:
 
     - name: Publish Test Results
       uses: mikepenz/action-junit-report@v2
-      if: always() # always run even if the previous step fails
       with:
         report_paths: '${{ inputs.test-dir }}/**/*.xml'
         fail_on_failure: true
