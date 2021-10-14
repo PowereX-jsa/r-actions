@@ -25,12 +25,10 @@ runs:
 
     - name: Run tests
       run: |
-        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"))
+        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
 
     - name: Publish Test Results
-      # TODO after this fix: https://github.com/actions/runner/issues/834
-      # if: always()
       uses: mikepenz/action-junit-report@v2
       with:
         report_paths: '${{ inputs.test-dir }}/**/*.xml'
