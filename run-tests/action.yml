@@ -35,9 +35,7 @@ runs:
 
     - name: Run tests
       run: |
-        getwd()
-
-        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = testthat::JunitReporter$new(file = "${{ inputs.test-dir }}/junit_result.xml"))
+        testthat::test_dir(path = "${{ inputs.test-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"))
       shell: Rscript {0}
 
     - name: Publish Test Results
