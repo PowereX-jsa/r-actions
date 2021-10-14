@@ -29,6 +29,8 @@ runs:
       shell: Rscript {0}
 
     - name: Publish Test Results
+      # TODO after this fix: https://github.com/actions/runner/issues/834
+      # if: always()
       uses: mikepenz/action-junit-report@v2
       with:
         report_paths: '${{ inputs.test-dir }}/**/*.xml'
