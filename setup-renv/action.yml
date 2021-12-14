@@ -33,8 +33,8 @@ runs:
           echo "renv library path: ${{ env.RENV_LIB }}"
         shell: bash
 
-      - name: Restore Renv package cache
-        uses: actions/cache@v2
+      - name: Always upload cache
+        uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ env.RENV_LIB }}"
           key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
@@ -61,10 +61,3 @@ runs:
         run: |
           ls -la "${{ env.RENV_LIB }}"
         shell: bash
-      
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: "${{ env.RENV_LIB }}"
-          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
-          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
