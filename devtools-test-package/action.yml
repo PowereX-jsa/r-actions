@@ -5,11 +5,23 @@ inputs:
   package-dir:
     description: 'Package directory'
     required: true
+  devtools-version:
+    description: 'Version of devtools package'
+    required: false
+    default: 2.4.2
 
 runs:
   using: "composite"
   steps:
-    # TODO devtools check/install
+    - name: Install renv
+      run: |
+        if ("devtools" %in% rownames(installed.packages()) && packageVersion("devtools") == "${{ inputs.devtools-version }}") {
+          print("devtools in version: ${{ inputs.devtools-version }} already installed")
+        } else {
+          install.packages("https://cran.r-project.org/src/contrib/Archive/devtools/devtools_${{ inputs.devtools-version }}.tar.gz", repos=NULL, type="source")
+        }
+      shell: Rscript {0}
+
     - name: Run tests
       run: |
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
