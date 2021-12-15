@@ -1,0 +1,22 @@
+name: 'devtools-test-package'
+description: 'Action for testing package via devtools'
+author: 'patrik.beka@powerex.io'
+inputs:
+  package-dir:
+    description: 'Package directory'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    # TODO devtools check/install
+    - name: Run tests
+      run: |
+        devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
+      shell: Rscript {0}
+
+    - name: Publish Test Results
+      uses: mikepenz/action-junit-report@v2
+      with:
+        report_paths: '${{ inputs.package-dir }}/**/*.xml'
+        fail_on_failure: true
