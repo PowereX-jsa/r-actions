@@ -1,0 +1,34 @@
+name: 'devtools-test-package'
+description: 'Action for testing package via devtools'
+author: 'patrik.beka@powerex.io'
+inputs:
+  package-dir:
+    description: 'Package directory'
+    required: true
+  devtools-version:
+    description: 'Version of devtools package'
+    required: false
+    default: 2.4.2
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install devtools
+      run: |
+        if ("devtools" %in% rownames(installed.packages()) && packageVersion("devtools") == "${{ inputs.devtools-version }}") {
+          print("devtools in version: ${{ inputs.devtools-version }} already installed")
+        } else {
+          install.packages("https://cran.r-project.org/src/contrib/Archive/devtools/devtools_${{ inputs.devtools-version }}.tar.gz", repos=NULL, type="source")
+        }
+      shell: Rscript {0}
+
+    - name: Run tests
+      run: |
+        devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
+      shell: Rscript {0}
+
+    - name: Publish Test Results
+      uses: mikepenz/action-junit-report@v2
+      with:
+        report_paths: '${{ inputs.package-dir }}/**/*.xml'
+        fail_on_failure: true
