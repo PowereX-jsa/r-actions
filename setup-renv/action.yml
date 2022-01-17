@@ -13,33 +13,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-
-      - name: Install renv
-        run: |
-          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
-        shell: Rscript {0}
-
-      # workaround for caching renv global lib directory
-      - name: Get and set global renv library dir
-        run: |
-          renv_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
-
-          # set path as env variable
-          system(paste0("echo 'RENV_LIB=", renv_lib_path, "' >> $GITHUB_ENV"))
-        shell: Rscript {0}
-
-      - name: Show used renv library path
-        run: |
-          echo "renv library path: ${{ env.RENV_LIB }}"
-        shell: bash
-
-      - name: Always upload cache
-        uses: pat-s/always-upload-cache@v2.1.5
-        with:
-          path: "${{ env.RENV_LIB }}"
-          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
-          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
-
       - name: Check if lockfile exist
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
@@ -52,12 +25,25 @@ runs:
           fi
         shell: bash
 
+      - name: Install renv
+        run: |
+          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
+        shell: Rscript {0}
+
+      - name: Always upload cache
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: "${{ inputs.working-dir }}/renv"
+          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
+          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
+
       - name: Install dependencies from lockfile
         run: |
+          renv::activate(project = "${{ inputs.working-dir }}")
           renv::restore(project = "${{ inputs.working-dir }}")
         shell: Rscript {0}
 
       - name: List installed packages
         run: |
-          ls -la "${{ env.RENV_LIB }}"
+          ls -la "${{ inputs.working-dir }}/renv"
         shell: bash
