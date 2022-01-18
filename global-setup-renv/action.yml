@@ -47,8 +47,8 @@ runs:
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ env.RENV_LIB }}"
-          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
-          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-
+          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-hashFiles(${{ inputs.working-dir }}/renv.lock)
+          restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Install dependencies from lockfile
         run: |
