@@ -40,6 +40,9 @@ runs:
       - name: Install dependencies from lockfile
         run: |
           renv::activate(project = "${{ inputs.working-dir }}")
+
+          renv::repair(project = "${{ inputs.working-dir }}")
+
           renv::restore(project = "${{ inputs.working-dir }}")
         shell: Rscript {0}
 
