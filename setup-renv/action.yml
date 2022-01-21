@@ -45,13 +45,6 @@ runs:
           key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-v2-${{ hashFiles('**/renv.lock') }}
           restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-v2
 
-      - name: Always upload local cache
-        uses: pat-s/always-upload-cache@v2.1.5
-        with:
-          path: "${{ inputs.working-dir }}/renv"
-          key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-v2-${{ hashFiles('**/renv.lock') }}
-          restore-keys: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-v2
-
       - name: Install dependencies from lockfile
         run: |
 
@@ -63,9 +56,4 @@ runs:
       - name: List installed packages
         run: |
           ls -la "${{ env.RENV_LIB }}"
-        shell: bash
-
-      - name: List renv
-        run: |
-          ls -la "${{ inputs.working-dir }}/renv"
         shell: bash
