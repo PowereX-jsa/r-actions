@@ -42,14 +42,14 @@ runs:
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ env.RENV_LIB }}"
-          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles(${{ inputs.working-dir }}/renv.lock) }}
+          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles('${{ inputs.working-dir }}/renv.lock') }}
           restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Always upload local cache
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ inputs.working-dir }}/renv"
-          key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles(${{ inputs.working-dir }}/renv.lock) }}
+          key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles('${{ inputs.working-dir }}/renv.lock') }}
           restore-keys: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Install dependencies from lockfile
