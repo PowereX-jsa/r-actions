@@ -13,12 +13,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - name: Check if lockfile exist
+      - name: Check if lockfile exist and export path
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
 
           if [ -f "$FILE" ]; then
               echo "$FILE found."
+
+              echo "RENV_LOCK_FILE_HASH=${{ hashFiles('$FILE') }}" >> "$GITHUB_ENV"
           else
               echo "$FILE does not exist."
               exit 1
@@ -42,14 +44,14 @@ runs:
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ env.RENV_LIB }}"
-          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles('**/renv.lock') }}
+          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ env.RENV_LOCK_FILE_HASH }}
           restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Always upload local cache
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ inputs.working-dir }}/renv"
-          key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ hashFiles('**/renv.lock') }}
+          key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ env.RENV_LOCK_FILE_HASH }}
           restore-keys: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-
 
       - name: Install dependencies from lockfile
