@@ -9,6 +9,10 @@ inputs:
     description: 'Version of renv package'
     required: false
     default: 0.14.0
+  cache-version:
+    description: 'Version of renv cache'
+    required: false
+    default: v3
 
 runs:
   using: "composite"
@@ -42,8 +46,8 @@ runs:
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ env.RENV_LIB }}"
-          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-v3-${{ hashFiles('**/renv.lock') }}
-          restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-v2
+          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}-${{ hashFiles('**/renv.lock') }}
+          restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}
 
       - name: Install dependencies from lockfile
         run: |
