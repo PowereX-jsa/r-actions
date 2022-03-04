@@ -28,7 +28,8 @@ runs:
 
     - name: Run tests
       run: |
-        if ("${{ inputs.activate-renv }}" == "TRUE") {
+        # check if true - github returns defaults as lowercase
+        if (toupper("${{ inputs.activate-renv }}") == "TRUE") {
           print("project uses renv - activating, make sure environment is restored before running this step!")
 
           renv::activate(project = "${{ inputs.package-dir }}")
