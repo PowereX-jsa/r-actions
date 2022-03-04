@@ -5,6 +5,10 @@ inputs:
   package-dir:
     description: 'Package directory'
     required: true
+  activate-renv:
+    description: 'Boolean flag - activate if tested package is using renv'
+    required: false
+    default: FALSE
   devtools-version:
     description: 'Version of devtools package'
     required: false
@@ -24,6 +28,12 @@ runs:
 
     - name: Run tests
       run: |
+        if ("${{ inputs.devtools-version }}" == "TRUE") {
+          print("project uses renv - activating, make sure environment is restored before running this step!")
+
+          renv::activate(project = "${{ inputs.package-dir }}")
+        }
+
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
 
