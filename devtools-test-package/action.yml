@@ -28,7 +28,7 @@ runs:
 
     - name: Run tests
       run: |
-        if ("${{ inputs.devtools-version }}" == "TRUE") {
+        if ("${{ inputs.activate-renv }}" == "TRUE") {
           print("project uses renv - activating, make sure environment is restored before running this step!")
 
           renv::activate(project = "${{ inputs.package-dir }}")
