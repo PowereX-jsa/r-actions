@@ -5,6 +5,10 @@ inputs:
   package-dir:
     description: 'Package directory'
     required: true
+  activate-renv:
+    description: 'Boolean flag - activate if tested package is using renv'
+    required: false
+    default: FALSE
   devtools-version:
     description: 'Version of devtools package'
     required: false
@@ -13,17 +17,22 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install devtools
+    - name: Run tests
       run: |
+        # check if true - github returns defaults as lowercase
+        if (toupper("${{ inputs.activate-renv }}") == "TRUE") {
+          print("project uses renv - activating, make sure environment is restored before running this step!")
+
+          renv::activate(project = "${{ inputs.package-dir }}")
+        }
+
+        # install devtools - needs to be in current r session because of renv
         if ("devtools" %in% rownames(installed.packages()) && packageVersion("devtools") == "${{ inputs.devtools-version }}") {
           print("devtools in version: ${{ inputs.devtools-version }} already installed")
         } else {
           install.packages("https://cran.r-project.org/src/contrib/Archive/devtools/devtools_${{ inputs.devtools-version }}.tar.gz", repos=NULL, type="source")
         }
-      shell: Rscript {0}
 
-    - name: Run tests
-      run: |
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
 
