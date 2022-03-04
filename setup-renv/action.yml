@@ -57,10 +57,8 @@ runs:
           Sys.setenv(GITHUB_PAT = "${{ inputs.personal-access-token }}")
 
           renv::activate(project = "${{ inputs.working-dir }}")
-          list.files(path = "${{ inputs.working-dir }}")
 
           renv::restore(project = "${{ inputs.working-dir }}")
-          list.files(path = "${{ inputs.working-dir }}")
 
           renv::isolate(project = "${{ inputs.working-dir }}")
           list.files(path = "${{ inputs.working-dir }}")
@@ -69,5 +67,5 @@ runs:
 
       - name: List installed packages
         run: |
-          ls -la "${{ env.RENV_LIB_DIR }}"
+          ls -la "${{ env.RENV_LIB_DIR }}/library/R-4.0/x86_64-pc-linux-gnu"
         shell: bash
