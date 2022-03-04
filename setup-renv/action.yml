@@ -9,6 +9,10 @@ inputs:
     description: 'Version of renv package'
     required: false
     default: 0.14.0
+  personal-access-token:
+    description: 'Github access token for installing packages from private repositories'
+    required: false
+    default: "personal-access-token"
   cache-version:
     description: 'Version of renv cache'
     required: false
@@ -51,6 +55,8 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
+          # TODO extract to first setup command
+          Sys.setenv(GITHUB_PAT = "${{ inputs.personal-access-token }}")
 
           renv::restore(project = "${{ inputs.working-dir }}")
         shell: Rscript {0}
