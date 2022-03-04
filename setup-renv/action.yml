@@ -57,10 +57,14 @@ runs:
           Sys.setenv(GITHUB_PAT = "${{ inputs.personal-access-token }}")
 
           renv::activate(project = "${{ inputs.working-dir }}")
+          list.files(path = "${{ inputs.working-dir }}")
 
           renv::restore(project = "${{ inputs.working-dir }}")
+          list.files(path = "${{ inputs.working-dir }}")
 
           renv::isolate(project = "${{ inputs.working-dir }}")
+          list.files(path = "${{ inputs.working-dir }}")
+          list.files(path = "${{ inputs.working-dir }}/renv")
         shell: Rscript {0}
 
       - name: List installed packages
