@@ -27,7 +27,9 @@ runs:
         }
 
         # install remotes package -> used for install specific devtools version from github
-        install.packages("remotes")
+        if (require("remotes") == FALSE) {
+          install.packages("remotes")
+        }
 
         remotes::install_github("r-lib/devtools@${{ inputs.devtools-version }}", upgrade = "never")
 
