@@ -31,6 +31,8 @@ runs:
 
         # check
         Sys.getenv("GITHUB_PAT")
+        Sys.unsetenv("GITHUB_PAT")
+        Sys.getenv("GITHUB_PAT")
 
         remotes::install_github("r-lib/devtools@${{ inputs.devtools-version }}", upgrade = "never")
 
