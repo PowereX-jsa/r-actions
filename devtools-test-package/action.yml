@@ -29,12 +29,7 @@ runs:
         # install remotes package -> used for install specific devtools version from github
         install.packages("remotes")
 
-        # install devtools - needs to be in current r session because of renv
-        if ("devtools" %in% rownames(installed.packages()) && packageVersion("devtools") == "${{ inputs.devtools-version }}") {
-          print("devtools in version: ${{ inputs.devtools-version }} already installed")
-        } else {
-          remotes::install_github("r-lib/devtools@${{ inputs.devtools-version }}")
-        }
+        remotes::install_github("r-lib/devtools@${{ inputs.devtools-version }}", upgrade = "never")
 
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
