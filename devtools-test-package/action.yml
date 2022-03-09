@@ -12,7 +12,7 @@ inputs:
   devtools-version:
     description: 'Version of devtools package'
     required: false
-    default: 2.4.2
+    default: v2.4.2
 
 runs:
   using: "composite"
@@ -26,11 +26,14 @@ runs:
           renv::activate(project = "${{ inputs.package-dir }}")
         }
 
+        # install remotes package -> used for install specific devtools version from github
+        install.packages("remotes")
+
         # install devtools - needs to be in current r session because of renv
         if ("devtools" %in% rownames(installed.packages()) && packageVersion("devtools") == "${{ inputs.devtools-version }}") {
           print("devtools in version: ${{ inputs.devtools-version }} already installed")
         } else {
-          install.packages("https://cran.r-project.org/src/contrib/Archive/devtools/devtools_${{ inputs.devtools-version }}.tar.gz", dependencies="Imports", repos=NULL, type="source")
+          remotes::install_github("r-lib/devtools@${{ inputs.devtools-version }}")
         }
 
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
