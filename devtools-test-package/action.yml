@@ -12,7 +12,7 @@ inputs:
   devtools-version:
     description: 'Version of devtools package'
     required: false
-    default: v2.4.2
+    default: v2.4.1
 
 runs:
   using: "composite"
