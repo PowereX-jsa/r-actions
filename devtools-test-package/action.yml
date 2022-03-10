@@ -27,6 +27,10 @@ runs:
 
         remotes::install_github("r-lib/devtools@${{ inputs.devtools-version }}", upgrade = "never")
 
+        list.files(path = "/usr/local/lib/R/site-library")
+
+        install.packages("RPostgres")
+
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
 
