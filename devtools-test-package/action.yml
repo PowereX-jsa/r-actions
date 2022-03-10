@@ -19,12 +19,6 @@ runs:
   steps:
     - name: Run tests
       run: |
-        # check if true - github returns defaults as lowercase
-        if (toupper("${{ inputs.activate-renv }}") == "TRUE") {
-          print("project uses renv - activating, make sure environment is restored before running this step!")
-
-          renv::activate(project = "${{ inputs.package-dir }}")
-        }
 
         # install remotes package -> used for install specific devtools version from github
         if (require("remotes") == FALSE) {
