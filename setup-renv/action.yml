@@ -70,8 +70,6 @@ runs:
           # set personal access token for private repositories
           Sys.setenv(GITHUB_PAT = "${{ inputs.personal-access-token }}")
 
-          print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
-
           # restore to global lib
           print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
           renv::restore(project = "${{ inputs.working-dir }}")
