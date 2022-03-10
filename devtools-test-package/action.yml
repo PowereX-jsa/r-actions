@@ -31,6 +31,8 @@ runs:
 
         install.packages("RPostgres")
 
+        print(Sys.getenv("R_LIBS"))
+
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), load_package = "source", stop_on_failure = FALSE)
       shell: Rscript {0}
 
