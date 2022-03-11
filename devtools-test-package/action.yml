@@ -30,10 +30,15 @@ runs:
         list.files(path = "/usr/local/lib/R/site-library")
 
         install.packages("RPostgres")
+        install.packages("sessioninfo")
 
         print(Sys.getenv("R_LIBS"))
 
-        devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), load_package = "installed", stop_on_failure = FALSE)
+        library("devtools")
+
+        sessioninfo::session_info()
+
+        devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
 
     - name: Publish Test Results
