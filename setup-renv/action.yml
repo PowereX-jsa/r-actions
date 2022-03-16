@@ -9,11 +9,6 @@ inputs:
     description: 'Version of renv package'
     required: false
     default: 0.14.0
-  # TODO setup via env var - GITHUB_PAT
-  personal-access-token:
-    description: 'Github access token for installing packages from private repositories'
-    required: false
-    default: "personal-access-token"
   cache-version:
     description: 'Version of renv cache'
     required: false
@@ -34,10 +29,11 @@ runs:
           fi
         shell: bash
 
-      # TODO install via remotes
       - name: Install renv
         run: |
-          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
+          install.packages("remotes")
+
+          remotes::install_github("rstudio/renv@${{ inputs.renv-version }}", upgrade = "never")
         shell: Rscript {0}
 
       - name: Set up renv dir as env variable
@@ -67,8 +63,6 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
-          # set personal access token for private repositories
-          Sys.setenv(GITHUB_PAT = "${{ inputs.personal-access-token }}")
 
           # restore to global lib
           print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
