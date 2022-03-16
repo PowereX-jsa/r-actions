@@ -31,7 +31,10 @@ runs:
 
       - name: Install renv
         run: |
-          install.packages("remotes")
+          # install remotes package -> used for install specific renv version from github
+          if (require("remotes") == FALSE) {
+            install.packages("remotes")
+          }
 
           remotes::install_github("rstudio/renv@${{ inputs.renv-version }}", upgrade = "never")
         shell: Rscript {0}
