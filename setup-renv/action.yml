@@ -87,5 +87,5 @@ runs:
 
       - name: List installed packages
         run: |
-          ls -la "${{ env.RENV_LIB_DIR }}/library/R-4.0/x86_64-pc-linux-gnu"
+          find "${{ env.RENV_LIB_DIR }}/library/" -maxdepth 3 -type d -ls
         shell: bash
