@@ -9,10 +9,6 @@ inputs:
     description: 'Version of renv package'
     required: false
     default: 0.14.0
-  personal-access-token:
-    description: 'Github access token for installing packages from private repositories'
-    required: false
-    default: "personal-access-token"
   cache-version:
     description: 'Version of renv cache'
     required: false
@@ -35,28 +31,49 @@ runs:
 
       - name: Install renv
         run: |
-          install.packages("https://cran.r-project.org/src/contrib/Archive/renv/renv_${{ inputs.renv-version }}.tar.gz", repos=NULL, type="source")
+          # install remotes package -> used for install specific renv version from github
+          if (require("remotes") == FALSE) {
+            install.packages("remotes")
+          }
+
+          remotes::install_github("rstudio/renv@${{ inputs.renv-version }}", upgrade = "never")
         shell: Rscript {0}
 
       - name: Set up renv dir as env variable
         run: |
+          renv_global_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
+
+          # set global lib dir
+          system(paste0("echo 'GLOBAL_LIB_DIR=", renv_global_lib_path, "' >> $GITHUB_ENV"))
+
           # set renv directory as env variable for cache
           system(paste0("echo 'RENV_LIB_DIR=", "${{ inputs.working-dir }}/renv", "' >> $GITHUB_ENV"))
         shell: Rscript {0}
 
-      - name: Always upload global cache
+      - name: Always upload local cache
         uses: pat-s/always-upload-cache@v2.1.5
         with:
           path: "${{ env.RENV_LIB_DIR }}"
-          key: ${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}-${{ hashFiles('**/renv.lock') }}
-          restore-keys: ${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}
+          key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}-${{ hashFiles('**/renv.lock') }}
+          restore-keys: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}
+
+      - name: Always upload global cache
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: "${{ env.GLOBAL_LIB_DIR }}"
+          key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}-${{ hashFiles('**/renv.lock') }}
+          restore-keys: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}
 
       - name: Install dependencies from lockfile
         run: |
-          # set personal access token for private repositories
-          Sys.setenv(GITHUB_PAT = "${{ inputs.personal-access-token }}")
 
+          # restore to global lib
+          print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
+          renv::restore(project = "${{ inputs.working-dir }}")
+
+          # activate renv, restore to local renv dir
           renv::activate(project = "${{ inputs.working-dir }}")
+          print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
 
           renv::restore(project = "${{ inputs.working-dir }}")
 

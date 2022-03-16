@@ -30,7 +30,7 @@ runs:
         if ("devtools" %in% rownames(installed.packages()) && packageVersion("devtools") == "${{ inputs.devtools-version }}") {
           print("devtools in version: ${{ inputs.devtools-version }} already installed")
         } else {
-          install.packages("https://cran.r-project.org/src/contrib/Archive/devtools/devtools_${{ inputs.devtools-version }}.tar.gz", repos=NULL, type="source")
+          install.packages("https://cran.r-project.org/src/contrib/Archive/devtools/devtools_${{ inputs.devtools-version }}.tar.gz", dependencies="Imports", repos=NULL, type="source")
         }
 
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
