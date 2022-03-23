@@ -34,6 +34,8 @@ runs:
         getwd()
 
         Sys.getenv("R_CONFIG_ACTIVE")
+        Sys.setenv(LOGGER_PATH = paste0(getwd(), "/", "logs"))
+        Sys.setenv(LOGGER_FILE_NAME = "logs.file")
 
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
