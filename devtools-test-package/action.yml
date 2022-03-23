@@ -29,6 +29,12 @@ runs:
 
         list.files(path = "/usr/local/lib/R/site-library")
 
+        Sys.setenv(R_CONFIG_ACTIVE = "default")
+
+        getwd()
+
+        Sys.getenv("R_CONFIG_ACTIVE")
+
         devtools::test(pkg = "${{ inputs.package-dir }}", reporter = testthat::JunitReporter$new(file = "junit_result.xml"), stop_on_failure = FALSE)
       shell: Rscript {0}
 
