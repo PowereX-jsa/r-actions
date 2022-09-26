@@ -77,12 +77,22 @@ runs:
 
           renv::restore(project = "${{ inputs.working-dir }}")
 
+          # isolate and deactivate renv
           renv::isolate(project = "${{ inputs.working-dir }}")
+          renv::deactivate(project = "${{ inputs.working-dir }}")
+          
+          # list installed packages in local renv
           list.files(path = "${{ inputs.working-dir }}")
           list.files(path = "${{ inputs.working-dir }}/renv")
+          
         shell: Rscript {0}
 
-      - name: List installed packages
+      - name: List installed packages in renv
         run: |
           find "${{ env.RENV_LIB_DIR }}/library/" -maxdepth 3 -type d -ls
+        shell: bash
+        
+      - name: List installed packages in global library dir
+        run: |
+          find "${{ env.GLOBAL_LIB_DIR }}/library/" -maxdepth 3 -type d -ls
         shell: bash
