@@ -20,7 +20,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ${{ env.working-directory }}
 
     steps:
       - uses: actions/checkout@v2
@@ -31,13 +31,14 @@ jobs:
       - name: Initialize global renv
         uses: PowereX-jsa/r-actions/setup-renv@master
         with:
-          working-dir: ${{ inputs.working-directory }}
+          working-dir: ${{ env.working-directory }}
           cache-version: v1
-
+          
       - name: Run tests and report
-        uses: PowereX-jsa/r-actions/run-tests@master
+        uses: PowereX-jsa/r-actions/devtools-test-package@master
         with:
-          test-dir: ${{ inputs.working-directory }}/tests/testthat
+          package-dir: ${{ env.working-directory }}
+          activate-renv: "TRUE"
 
       - name: Get branch name
         id: branch-name
@@ -63,8 +64,8 @@ jobs:
           repo: ${{ env.docker-repo }}
           region: eu-central-1
           tags: ${{ env.TAG }}
-          dockerfile: "${{ inputs.working-directory }}/Dockerfile"
+          dockerfile: "${{ env.working-directory }}/Dockerfile"
           create_repo: false
           set_repo_policy: false
           repo_policy_file: repo-policy.json
-          path: ${{ inputs.working-directory }}
+          path: ${{ env.working-directory }}
