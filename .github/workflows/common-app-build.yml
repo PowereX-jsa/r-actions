@@ -7,7 +7,10 @@ on:
       docker-repo:
         required: true
         type: string
-
+      cache-version:
+        required: true
+        type: string
+        default: v1
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,7 +35,7 @@ jobs:
         uses: PowereX-jsa/r-actions/setup-renv@master
         with:
           working-dir: ${{ env.working-directory }}
-          cache-version: v1
+          cache-version: ${{ inputs.cache-version }}
           
       - name: Run tests and report
         uses: PowereX-jsa/r-actions/devtools-test-package@master
