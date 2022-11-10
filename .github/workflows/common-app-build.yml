@@ -11,6 +11,10 @@ on:
         required: true
         type: string
         default: v1
+      tests-packages:
+        required: true
+        type: string
+        
 jobs:
   build:
     runs-on: ubuntu-latest
