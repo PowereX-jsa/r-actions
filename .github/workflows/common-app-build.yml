@@ -40,12 +40,19 @@ jobs:
         with:
           working-dir: ${{ env.working-directory }}
           cache-version: ${{ inputs.cache-version }}
-          
+             
       - name: Run tests and report
+        if: inputs.tests-packages == 'yes'
         uses: PowereX-jsa/r-actions/devtools-test-package@master
         with:
           package-dir: ${{ env.working-directory }}
           activate-renv: "TRUE"
+          
+      - name: Run tests and report
+        if: inputs.tests-packages == 'no'
+        uses: PowereX-jsa/r-actions/run-tests@master
+        with:
+          test-dir: ${{ env.working-directory }}/tests/testthat
 
       - name: Get branch name
         id: branch-name
