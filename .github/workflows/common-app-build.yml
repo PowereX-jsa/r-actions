@@ -26,12 +26,10 @@ jobs:
       image: powerex/pwx-r:4.1.2
     env:
       GITHUB_PAT: "${{ secrets.ACCESS_TOKEN_GITHUB }}"
-      working-directory: ${{ inputs.working-directory }}
-      docker-repo: ${{ inputs.docker-repo }}
     defaults:
       run:
         shell: bash
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ inputs.working-directory }}
 
     steps:
       - uses: actions/checkout@v2
@@ -42,7 +40,7 @@ jobs:
       - name: Initialize global renv
         uses: PowereX-jsa/r-actions/setup-renv@master
         with:
-          working-dir: ${{ env.working-directory }}
+          working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
           cache-version: ${{ inputs.cache-version }}
              
@@ -50,14 +48,14 @@ jobs:
         if: inputs.tests-packages == 'true'
         uses: PowereX-jsa/r-actions/devtools-test-package@master
         with:
-          package-dir: ${{ env.working-directory }}
+          package-dir: ${{ inputs.working-directory }}
           activate-renv: "TRUE"
           
       - name: Run tests and report
         if: inputs.tests-packages == 'false'
         uses: PowereX-jsa/r-actions/run-tests@master
         with:
-          test-dir: ${{ env.working-directory }}/tests/testthat
+          test-dir: ${{ inputs.working-directory }}/tests/testthat
 
       - name: Get branch name
         id: branch-name
@@ -80,11 +78,11 @@ jobs:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          repo: ${{ env.docker-repo }}
+          repo: ${{ inputs.docker-repo }}
           region: eu-central-1
           tags: ${{ env.TAG }}
-          dockerfile: "${{ env.working-directory }}/Dockerfile"
+          dockerfile: "${{ inputs.working-directory }}/Dockerfile"
           create_repo: false
           set_repo_policy: false
           repo_policy_file: repo-policy.json
-          path: ${{ env.working-directory }}
+          path: ${{ inputs.working-directory }}
