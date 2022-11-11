@@ -1,0 +1,88 @@
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+      docker-repo:
+        required: true
+        type: string
+      cache-version:
+        required: false
+        type: string
+        default: v1
+      is-package:
+        required: true
+        type: string
+      renv-version:
+        required: false
+        type: string
+        default: 0.14.0
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: powerex/pwx-r:4.1.2
+    env:
+      GITHUB_PAT: "${{ secrets.ACCESS_TOKEN_GITHUB }}"
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: false
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Initialize global renv
+        uses: PowereX-jsa/r-actions/setup-renv@master
+        with:
+          working-dir: ${{ inputs.working-directory }}
+          renv-version: ${{ inputs.renv-version }}
+          cache-version: ${{ inputs.cache-version }}
+             
+      - name: Run tests and report
+        if: inputs.is-package == 'true'
+        uses: PowereX-jsa/r-actions/devtools-test-package@master
+        with:
+          package-dir: ${{ inputs.working-directory }}
+          activate-renv: "TRUE"
+          
+      - name: Run tests and report
+        if: inputs.is-package == 'false'
+        uses: PowereX-jsa/r-actions/run-tests@master
+        with:
+          test-dir: ${{ inputs.working-directory }}/tests/testthat
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.1
+
+      # building docker images
+      - name: Set docker tag
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            echo "TAG=latest,prod_$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+          else
+            echo "TAG=$(echo test-deploy_${{ steps.branch-name.outputs.current_branch }} | tr -s '/' '_' | tr -s '#' '_' )" >> "$GITHUB_ENV"
+          fi
+      - name: Show docker image tag
+        run: |
+          echo "going to use following tag for docker image: ${{ env.TAG }}"
+      - name: Docker build and push
+        uses: docker://ghcr.io/kciter/aws-ecr-action:latest
+        with:
+          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          repo: ${{ inputs.docker-repo }}
+          region: eu-central-1
+          tags: ${{ env.TAG }}
+          dockerfile: "${{ inputs.working-directory }}/Dockerfile"
+          create_repo: false
+          set_repo_policy: false
+          repo_policy_file: repo-policy.json
+          path: ${{ inputs.working-directory }}
