@@ -45,14 +45,14 @@ jobs:
           cache-version: ${{ inputs.cache-version }}
              
       - name: Run tests and report
-        if: inputs.tests-packages == 'true'
+        if: inputs.is-package == 'true'
         uses: PowereX-jsa/r-actions/devtools-test-package@master
         with:
           package-dir: ${{ inputs.working-directory }}
           activate-renv: "TRUE"
           
       - name: Run tests and report
-        if: inputs.tests-packages == 'false'
+        if: inputs.is-package == 'false'
         uses: PowereX-jsa/r-actions/run-tests@master
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
