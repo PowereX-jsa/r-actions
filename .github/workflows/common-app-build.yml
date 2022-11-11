@@ -8,12 +8,16 @@ on:
         required: true
         type: string
       cache-version:
-        required: true
+        required: false
         type: string
         default: v1
-      tests-packages:
+      is-package:
         required: true
         type: string
+      renv-version:
+        required: false
+        type: string
+        default: 0.14.0
         
 jobs:
   build:
@@ -39,17 +43,18 @@ jobs:
         uses: PowereX-jsa/r-actions/setup-renv@master
         with:
           working-dir: ${{ env.working-directory }}
+          renv-version: ${{ inputs.renv-version }}
           cache-version: ${{ inputs.cache-version }}
              
       - name: Run tests and report
-        if: inputs.tests-packages == 'yes'
+        if: inputs.tests-packages == 'true'
         uses: PowereX-jsa/r-actions/devtools-test-package@master
         with:
           package-dir: ${{ env.working-directory }}
           activate-renv: "TRUE"
           
       - name: Run tests and report
-        if: inputs.tests-packages == 'no'
+        if: inputs.tests-packages == 'false'
         uses: PowereX-jsa/r-actions/run-tests@master
         with:
           test-dir: ${{ env.working-directory }}/tests/testthat
