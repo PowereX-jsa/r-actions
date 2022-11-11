@@ -20,7 +20,7 @@ on:
         default: 0.14.0
         
 jobs:
-  build:
+  common-r-api-build:
     runs-on: ubuntu-latest
     container:
       image: powerex/pwx-r:4.1.2
