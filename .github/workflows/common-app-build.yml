@@ -64,6 +64,7 @@ jobs:
       # building docker images
       - name: Set docker tag
         run: |
+          git config --global --add safe.directory /__w/Shiny-apps/Shiny-apps
           if [[ ${{ github.ref }} == $(git rev-parse --short HEAD) ]]; then
             echo "TAG=latest,prod_$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
           else
