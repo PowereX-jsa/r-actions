@@ -64,7 +64,7 @@ jobs:
       # building docker images
       - name: Set docker tag
         run: |
-          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+          if [[ ${{ github.ref }} == $(git rev-parse --short HEAD) ]]; then
             echo "TAG=latest,prod_$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
           else
             echo "TAG=$(echo test-deploy_${{ steps.branch-name.outputs.current_branch }} | tr -s '/' '_' | tr -s '#' '_' )" >> "$GITHUB_ENV"
