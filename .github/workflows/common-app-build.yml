@@ -36,7 +36,6 @@ jobs:
         with:
           lfs: false
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-          path: ${{ inputs.working-directory }}
           set-safe-directory: true
 
       - name: Initialize global renv
