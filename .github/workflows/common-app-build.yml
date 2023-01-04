@@ -36,7 +36,7 @@ jobs:
         with:
           lfs: false
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-          set-safe-directory: true
+          set-safe-directory: false
 
       - name: Initialize global renv
         uses: PowereX-jsa/r-actions/setup-renv@master
