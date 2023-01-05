@@ -32,10 +32,11 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: false
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          set-safe-directory: true
 
       - name: Initialize global renv
         uses: PowereX-jsa/r-actions/setup-renv@master
@@ -60,6 +61,10 @@ jobs:
       - name: Get branch name
         id: branch-name
         uses: tj-actions/branch-names@v5.1
+
+      # Declares the repository safe and not under dubious ownership.
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       # building docker images
       - name: Set docker tag
