@@ -18,6 +18,14 @@ on:
         required: false
         type: string
         default: 0.14.0
+      install-package:
+        required: false
+        type: string
+        default: false
+      install-package-command:
+        required: false
+        type: string
+        default: false
         
 jobs:
   common-r-api-build:
@@ -44,6 +52,13 @@ jobs:
           working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
           cache-version: ${{ inputs.cache-version }}
+         
+      # used in poweRex.nomination -> parallel run - needs to be installed before tests
+      - name: Install package via r cmd
+        if: inputs.install-package == 'true'
+        run: |
+            ${{ inputs.install-package-command }}
+        shell: bash {0}
              
       - name: Run tests and report
         if: inputs.is-package == 'true'
