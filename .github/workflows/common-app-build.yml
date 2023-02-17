@@ -21,7 +21,7 @@ on:
       install-package-command:
         required: false
         type: string
-        default: false
+        default: echo "no command"
       
 jobs:
   common-r-api-build:
