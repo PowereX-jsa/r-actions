@@ -33,9 +33,7 @@ runs:
       shell: Rscript {0}
 
     - name: Publish Test Results
-      uses: dorny/test-reporter@v1
+      uses: mikepenz/action-junit-report@v2
       with:
-        name: "JUnit Test Report"
-        reporter: 'jest-junit'
-        path: '${{ inputs.package-dir }}/**/*.xml'
-        fail-on-error: true
+        report_paths: '${{ inputs.package-dir }}/**/*.xml'
+        fail_on_failure: true
