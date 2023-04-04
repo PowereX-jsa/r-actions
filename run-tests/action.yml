@@ -29,9 +29,8 @@ runs:
       shell: Rscript {0}
 
     - name: Publish Test Results
-      uses: dorny/test-reporter@v1
-        name: "JUnit Test Report"
-        reporter: 'jest-junit'
-        path: '${{ inputs.package-dir }}/**/*.xml'
-        fail-on-error: true
+     uses: mikepenz/action-junit-report@v2
+      with:
+        report_paths: '${{ inputs.package-dir }}/**/*.xml'
+        fail_on_failure: true
         
