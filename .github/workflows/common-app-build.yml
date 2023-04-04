@@ -68,10 +68,6 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v5.1
-
       # Declares the repository safe and not under dubious ownership.
       - name: Add repository to git safe directories
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -87,6 +83,8 @@ jobs:
       - name: Show docker image tag
         run: |
           echo "going to use following tag for docker image: ${{ env.TAG }}"
+      - name: Publish docker image tag
+        run: echo "tag=${{ env.TAG }}" >> $GITHUB_STEP_SUMMARY
       - name: Docker build and push
         uses: kciter/aws-ecr-action@master
         with:
