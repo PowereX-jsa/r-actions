@@ -35,5 +35,7 @@ runs:
     - name: Publish Test Results
       uses: dorny/test-reporter@v1
       with:
-        report_paths: '${{ inputs.package-dir }}/**/*.xml'
-        fail_on_failure: true
+        name: "JUnit Test Report"
+        reporter: 'junit'
+        path: '${{ inputs.package-dir }}/**/*.xml'
+        fail-on-error: true
