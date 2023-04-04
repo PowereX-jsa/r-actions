@@ -55,6 +55,10 @@ jobs:
             ${{ inputs.install-package-command }}
         shell: bash {0}
              
+      # Declares the repository safe and not under dubious ownership.
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+             
       - name: Run tests and report
         if: inputs.is-package == 'true'
         uses: PowereX-jsa/r-actions/devtools-test-package@#912_update_github_actions
@@ -67,10 +71,6 @@ jobs:
         uses: PowereX-jsa/r-actions/run-tests@master
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
-
-      # Declares the repository safe and not under dubious ownership.
-      - name: Add repository to git safe directories
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       # building docker images
       - name: Set docker tag
