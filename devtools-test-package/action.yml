@@ -36,6 +36,6 @@ runs:
       uses: dorny/test-reporter@v1
       with:
         name: "JUnit Test Report"
-        reporter: 'junit'
+        reporter: 'jest-junit'
         path: '${{ inputs.package-dir }}/**/*.xml'
         fail-on-error: true
