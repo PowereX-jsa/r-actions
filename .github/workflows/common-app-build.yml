@@ -43,7 +43,7 @@ jobs:
           set-safe-directory: true
 
       - name: Initialize global renv
-        uses: PowereX-jsa/r-actions/setup-renv@#912_update_github_actions
+        uses: PowereX-jsa/r-actions/setup-renv@master
         with:
           working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
@@ -61,14 +61,14 @@ jobs:
              
       - name: Run tests and report
         if: inputs.is-package == 'true'
-        uses: PowereX-jsa/r-actions/devtools-test-package@#912_update_github_actions
+        uses: PowereX-jsa/r-actions/devtools-test-package@master
         with:
           package-dir: ${{ inputs.working-directory }}
           activate-renv: "TRUE"
           
       - name: Run tests and report
         if: inputs.is-package == 'false'
-        uses: PowereX-jsa/r-actions/run-tests@#912_update_github_actions
+        uses: PowereX-jsa/r-actions/run-tests@master
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
