@@ -51,14 +51,14 @@ runs:
         shell: Rscript {0}
 
       - name: Always upload local cache
-        uses: pat-s/always-upload-cache@v2.1.5
+        uses: pat-s/always-upload-cache@v3.0.11
         with:
           path: "${{ env.RENV_LIB_DIR }}"
           key: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}-${{ hashFiles('**/renv.lock') }}
           restore-keys: local-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}
 
       - name: Always upload global cache
-        uses: pat-s/always-upload-cache@v2.1.5
+        uses: pat-s/always-upload-cache@v3.0.11
         with:
           path: "${{ env.GLOBAL_LIB_DIR }}"
           key: global-${{ runner.os }}-${{ inputs.working-dir }}-renv-${{ inputs.cache-version }}-${{ hashFiles('**/renv.lock') }}

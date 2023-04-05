@@ -55,6 +55,10 @@ jobs:
             ${{ inputs.install-package-command }}
         shell: bash {0}
              
+      # Declares the repository safe and not under dubious ownership.
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+             
       - name: Run tests and report
         if: inputs.is-package == 'true'
         uses: PowereX-jsa/r-actions/devtools-test-package@master
@@ -68,27 +72,19 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v5.1
-
-      # Declares the repository safe and not under dubious ownership.
-      - name: Add repository to git safe directories
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
       # building docker images
       - name: Set docker tag
         run: |
           if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
             echo "TAG=latest,prod_$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
           else
-            echo "TAG=$(echo test-deploy_${{ steps.branch-name.outputs.current_branch }} | tr -s '/' '_' | tr -s '#' '_' )" >> "$GITHUB_ENV"
+            echo "TAG=$(echo test-deploy_${{ github.head_ref }} | tr -s '/' '_' | tr -s '#' '_' )" >> "$GITHUB_ENV"
           fi
       - name: Show docker image tag
         run: |
           echo "going to use following tag for docker image: ${{ env.TAG }}"
       - name: Docker build and push
-        uses: docker://ghcr.io/kciter/aws-ecr-action:latest
+        uses: kciter/aws-ecr-action@master
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
