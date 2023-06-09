@@ -27,7 +27,7 @@ jobs:
   common-r-api-build:
     runs-on: ubuntu-latest
     container:
-      image: powerex/pwx-r:4.1.2
+      image: powerex/pwx-r:4.3.0
     env:
       GITHUB_PAT: "${{ secrets.ACCESS_TOKEN_GITHUB }}"
     defaults:
