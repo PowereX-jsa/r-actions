@@ -44,12 +44,21 @@ jobs:
 
       - name: Test GitHub PAT
         run: |
-          STATUS=$(curl -H "Authorization: token $GITHUB_PAT" https://api.github.com/user | grep -c login)
-          if [ "$STATUS" -eq 0 ]; then
+          RESPONSE=$(curl -s -w "%{http_code}" -H "Authorization: token $GITHUB_PAT" https://api.github.com/user)
+          HTTP_STATUS=${RESPONSE:(-3)}
+          CONTENT=${RESPONSE:0:(-3)}
+
+          if [ "$HTTP_STATUS" -ne 200 ]; then
             echo "PAT is not working as expected"
             exit 1
           else
-            echo "PAT is working as expected"
+            LOGIN_COUNT=$(echo $CONTENT | grep -c login)
+            if [ "$LOGIN_COUNT" -eq 0 ]; then
+              echo "PAT is deprecated"
+              exit 1
+            else
+              echo "PAT is working as expected"
+            fi
           fi
 
       - name: Initialize global renv
