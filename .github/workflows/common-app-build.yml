@@ -17,7 +17,7 @@ on:
       renv-version:
         required: false
         type: string
-        default: 0.14.0
+        default: 0.17.3
       install-package-command:
         required: false
         type: string
@@ -43,7 +43,7 @@ jobs:
           set-safe-directory: true
 
       - name: Initialize global renv
-        uses: PowereX-jsa/r-actions/setup-renv@master
+        uses: PowereX-jsa/r-actions/setup-renv@4_3_0_rstudio_test
         with:
           working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
