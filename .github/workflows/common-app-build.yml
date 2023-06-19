@@ -42,6 +42,16 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           set-safe-directory: true
 
+      - name: Test GitHub PAT
+        run: |
+          STATUS=$(curl -H "Authorization: token $GITHUB_PAT" https://api.github.com/user | grep -c login)
+          if [ "$STATUS" -eq 0 ]; then
+            echo "PAT is not working as expected"
+            exit 1
+          else
+            echo "PAT is working as expected"
+          fi
+
       - name: Initialize global renv
         uses: PowereX-jsa/r-actions/setup-renv@4_3_0_rstudio_test
         with:
