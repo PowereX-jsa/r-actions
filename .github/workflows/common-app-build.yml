@@ -116,3 +116,5 @@ jobs:
           set_repo_policy: false
           repo_policy_file: repo-policy.json
           path: ${{ inputs.working-directory }}
+          build_args: GITHUB_PAT=${{ secrets.ACCESS_TOKEN_GITHUB }}
+          
