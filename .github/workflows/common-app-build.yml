@@ -112,7 +112,7 @@ jobs:
           region: eu-central-1
           tags: ${{ env.TAG }}
           dockerfile: "${{ inputs.working-directory }}/Dockerfile"
-          build_args: GITHUB_PAT=${{ secrets.ACCESS_TOKEN_GITHUB }}
+          extra_build_args: "--build-arg GITHUB_PAT=${{ secrets.ACCESS_TOKEN_GITHUB }}"
           create_repo: false
           set_repo_policy: false
           repo_policy_file: repo-policy.json
