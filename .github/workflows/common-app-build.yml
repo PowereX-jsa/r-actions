@@ -17,7 +17,7 @@ on:
       renv-version:
         required: false
         type: string
-        default: 1.0.2
+        default: 0.14.0
       install-package-command:
         required: false
         type: string
@@ -116,4 +116,3 @@ jobs:
           set_repo_policy: false
           repo_policy_file: repo-policy.json
           path: ${{ inputs.working-directory }}
-          
