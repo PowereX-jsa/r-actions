@@ -102,15 +102,7 @@ jobs:
       - name: Show docker image tag
         run: |
           echo "going to use following tag for docker image: ${{ env.TAG }}"
-      - name: Build Docker image
-        run: |
-          docker build \
-            --build-arg GITHUB_PAT=${{ secrets.ACCESS_TOKEN_GITHUB }} \
-            -t ${{ inputs.docker-repo }}:${{ env.TAG }} \
-            -f ${{ inputs.working-directory }}/Dockerfile \
-            ${{ inputs.working-directory }}
-
-      - name: Push Docker image to ECR
+      - name: Docker build and push
         uses: kciter/aws-ecr-action@master
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -119,8 +111,8 @@ jobs:
           repo: ${{ inputs.docker-repo }}
           region: eu-central-1
           tags: ${{ env.TAG }}
-          # Avoid building again
-          no_build: true 
+          dockerfile: "${{ inputs.working-directory }}/Dockerfile"
+          build_args: GITHUB_PAT=${{ secrets.ACCESS_TOKEN_GITHUB }}
           create_repo: false
           set_repo_policy: false
           repo_policy_file: repo-policy.json
