@@ -8,11 +8,11 @@ inputs:
   renv-version:
     description: 'Version of renv package'
     required: false
-    default: 1.0.2
+    default: 0.14.0
   cache-version:
     description: 'Version of renv cache'
     required: false
-    default: v4
+    default: v3
 
 runs:
   using: "composite"
