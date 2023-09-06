@@ -61,6 +61,10 @@ jobs:
             fi
           fi
 
+      # make sure the renv directory is created
+      - name: Ensure renv library directory exists
+        run: mkdir -p ./renv/library
+
       - name: Initialize global renv
         uses: PowereX-jsa/r-actions/setup-renv@4_3_0_rstudio_test
         with:
