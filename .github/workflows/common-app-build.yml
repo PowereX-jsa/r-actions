@@ -42,31 +42,12 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           set-safe-directory: true
 
-      - name: Test GitHub PAT
-        run: |
-          RESPONSE=$(curl -s -w "%{http_code}" -H "Authorization: token $GITHUB_PAT" https://api.github.com/user)
-          HTTP_STATUS=${RESPONSE:(-3)}
-          CONTENT=${RESPONSE:0:(-3)}
-
-          if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "PAT is not working as expected"
-            exit 1
-          else
-            LOGIN_COUNT=$(echo $CONTENT | grep -c login)
-            if [ "$LOGIN_COUNT" -eq 0 ]; then
-              echo "PAT is deprecated"
-              exit 1
-            else
-              echo "PAT is working as expected"
-            fi
-          fi
-
       # make sure the renv directory is created
       - name: Ensure renv library directory exists
         run: mkdir -p ./renv/library
 
       - name: Initialize global renv
-        uses: PowereX-jsa/r-actions/setup-renv@4_3_0_rstudio_test
+        uses: PowereX-jsa/r-actions/setup-renv@master
         with:
           working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
