@@ -17,7 +17,7 @@ on:
       renv-version:
         required: false
         type: string
-        default: 1.0.0
+        default: 0.17.3
       install-package-command:
         required: false
         type: string
