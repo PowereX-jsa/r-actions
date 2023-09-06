@@ -47,7 +47,7 @@ jobs:
         run: mkdir -p ./renv/library
 
       - name: Initialize global renv
-        uses: PowereX-jsa/r-actions/setup-renv@4_3_0_rstudio_test
+        uses: PowereX-jsa/r-actions/setup-renv@master
         with:
           working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
