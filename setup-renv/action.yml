@@ -39,6 +39,11 @@ runs:
           remotes::install_github("rstudio/renv@${{ inputs.renv-version }}", upgrade = "never")
         shell: Rscript {0}
 
+      - name: Disable renv sandbox
+        run: |
+          options(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
+        shell: Rscript {0}
+
       - name: Set up renv dir as env variable
         run: |
           renv_global_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
