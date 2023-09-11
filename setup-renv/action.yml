@@ -66,7 +66,10 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
-        
+          # Print current .libPaths()
+          cat("Current .libPaths():\n")
+          print(.libPaths())
+
           # Disable renv sandbox
           options(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
 
@@ -76,7 +79,10 @@ runs:
 
           # activate renv, restore to local renv dir
           renv::activate(project = "${{ inputs.working-dir }}")
-          print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
+
+          # Print updated .libPaths()
+          cat("Updated .libPaths():\n")
+          print(.libPaths())
 
           renv::restore(project = "${{ inputs.working-dir }}")
 
