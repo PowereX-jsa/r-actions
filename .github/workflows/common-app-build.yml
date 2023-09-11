@@ -76,6 +76,8 @@ jobs:
         run: |
           Rscript -e "paths <- Sys.getenv('RENV_PATHS');
                       info <- file.info(paths);
+                      is_symlink <- info$isdir & !is.na(info$linkmode);
+                      print(data.frame(path = paths, symlink = is_symlink));"
 
       # building docker images
       - name: Set docker tag
