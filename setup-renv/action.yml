@@ -17,6 +17,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+  
+      - name: Set RENV_CONFIG_SANDBOX_ENABLED
+        run: echo "RENV_CONFIG_SANDBOX_ENABLED=FALSE" >> $GITHUB_ENV
+        shell: bash
+  
       - name: Check if lockfile exist
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
