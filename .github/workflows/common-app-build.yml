@@ -72,12 +72,24 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
-      - name: Check if renv paths are symlinks
+      - name: Print renv library paths, check if symlinks and list files
         run: |
-          Rscript -e "paths <- Sys.getenv('RENV_PATHS');
-                      info <- file.info(paths);
-                      is_symlink <- info$isdir & !is.na(info$linkmode);
-                      print(data.frame(path = paths, symlink = is_symlink));"
+          Rscript -e "library(renv);
+                      renv_paths <- renv::paths();
+                      cat('Paths related to renv:\n');
+                      print(renv_paths);
+                      cat('\nPath where packages are installed:\n', renv_paths$library, '\n');
+                      
+                      # Check symlinks
+                      paths_info <- file.info(renv_paths$library);
+                      if (is.na(paths_info$link)) {
+                        cat(renv_paths$library, 'is not a symlink.\n');
+                      } else {
+                        cat(renv_paths$library, 'is a symlink pointing to', paths_info$link, '\n');
+                      }"
+
+          echo "Files inside renv library path:"
+          ls -la "${{ renv_paths$library }}"
 
       # building docker images
       - name: Set docker tag
