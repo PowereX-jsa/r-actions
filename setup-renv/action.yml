@@ -24,6 +24,7 @@ runs:
 
       - name: Override renv library path
         run: echo "RENV_PATHS_LIBRARY=/opt/app/renv/library/R-4.3/x86_64-pc-linux-gnu" >> $GITHUB_ENV
+        shell: bash
   
       - name: Check if lockfile exist
         run: |
