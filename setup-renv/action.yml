@@ -70,9 +70,6 @@ runs:
           cat("Current .libPaths():\n")
           print(.libPaths())
 
-          # Disable renv sandbox
-          options(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
-
           # restore to global lib
           print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
           renv::restore(project = "${{ inputs.working-dir }}")
