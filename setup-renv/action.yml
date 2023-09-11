@@ -17,11 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - name: Disable renv sandbox
-        run: |
-          options(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
-        shell: Rscript {0}
-  
       - name: Check if lockfile exist
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
@@ -71,6 +66,9 @@ runs:
 
       - name: Install dependencies from lockfile
         run: |
+        
+          # Disable renv sandbox
+          options(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
 
           # restore to global lib
           print(paste0("installing to lib: ", renv:::renv_libpaths_resolve(library = NULL)))
