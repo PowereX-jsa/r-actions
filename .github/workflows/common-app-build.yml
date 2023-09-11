@@ -43,8 +43,8 @@ jobs:
           set-safe-directory: true
 
       # make sure the renv directory is created
-      - name: Ensure renv library directory exists
-        run: mkdir -p ./renv/library
+      #- name: Ensure renv library directory exists
+      #  run: mkdir -p ./renv/library
 
       - name: Disable renv sandbox
         run: |
