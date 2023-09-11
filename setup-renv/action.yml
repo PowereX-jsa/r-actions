@@ -17,6 +17,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+      - name: Disable renv sandbox
+        run: |
+          options(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
+        shell: Rscript {0}
+  
       - name: Check if lockfile exist
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
@@ -27,6 +32,10 @@ runs:
               echo "$FILE does not exist."
               exit 1
           fi
+        shell: bash
+
+      - name: Set RENV_CONFIG_SANDBOX_ENABLED
+        run: echo "RENV_CONFIG_SANDBOX_ENABLED=FALSE" >> $GITHUB_ENV
         shell: bash
 
       - name: Install renv
