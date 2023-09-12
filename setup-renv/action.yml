@@ -107,6 +107,15 @@ runs:
 
       - name: List content of the target renv directory
         run: |
+          echo "Listing content of /usr/local/lib/R/site-library/renv..."
+          ls -la /usr/local/lib/R/site-library/renv
+
+          echo "Listing content of /__w/_temp/_github_home/.cache/R/renv..."
+          ls -la /__w/_temp/_github_home/.cache/R/renv
+
+          echo "Listing content of /__w/_temp/_github_home/.cache/R/renv/library/DeltaForecastUberModelAPI-a3c06007/R-4.3/x86_64-pc-linux-gnu/renv..."
+          ls -la /__w/_temp/_github_home/.cache/R/renv/library/DeltaForecastUberModelAPI-a3c06007/R-4.3/x86_64-pc-linux-gnu/renv
+
           echo "Listing content of /__w/Shiny-apps/Shiny-apps/APIs/DeltaForecastUberModelAPI/renv..."
           ls -la /__w/Shiny-apps/Shiny-apps/APIs/DeltaForecastUberModelAPI/renv
         shell: bash
