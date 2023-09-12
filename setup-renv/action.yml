@@ -124,7 +124,7 @@ runs:
           if [ -d "${{ env.RENV_LIB_DIR }}/library/" ]; then
             find "${{ env.RENV_LIB_DIR }}/library/" -maxdepth 3 -type d -ls
           else
-            echo "Directory ${env.RENV_LIB_DIR}/library/ does not exist!"
+            echo "Directory ${{ env.RENV_LIB_DIR }}/library/ does not exist!"
           fi
         shell: bash
     
