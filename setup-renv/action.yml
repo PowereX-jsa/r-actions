@@ -104,7 +104,8 @@ runs:
         run: |
           echo "Searching for renv directories..."
           find / -type d -name "renv" 2>/dev/null
-
+        shell: bash
+        
       #debug 
       - name: Check root working directory
         run: |
