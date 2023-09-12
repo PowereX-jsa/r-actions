@@ -118,6 +118,9 @@ runs:
 
           echo "Listing content of /__w/Shiny-apps/Shiny-apps/APIs/DeltaForecastUberModelAPI/renv..."
           ls -la /__w/Shiny-apps/Shiny-apps/APIs/DeltaForecastUberModelAPI/renv
+
+          echo "Listing content of /__w/_temp/_github_home/.cache/R/renv/library..."
+          ls -la /__w/_temp/_github_home/.cache/R/renv/library
         shell: bash
         
       #debug 
