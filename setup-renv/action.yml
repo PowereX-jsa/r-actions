@@ -100,6 +100,41 @@ runs:
           
         shell: Rscript {0}
 
+
+      #debug 
+      - name: Check root working directory
+        run: |
+          echo "Inspecting the root working directory content:"
+          ls -la "${{ inputs.working-dir }}"
+        shell: bash
+    
+      - name: Check RENV_LIB_DIR content
+        run: |
+          echo "Inspecting RENV_LIB_DIR:"
+          if [ -d "${{ env.RENV_LIB_DIR }}" ]; then
+            ls -la "${{ env.RENV_LIB_DIR }}"
+          else
+            echo "RENV_LIB_DIR does not exist!"
+          fi
+        shell: bash
+    
+      - name: List installed packages in renv
+        run: |
+          echo "Trying to find and list renv library content:"
+          if [ -d "${{ env.RENV_LIB_DIR }}/library/" ]; then
+            find "${{ env.RENV_LIB_DIR }}/library/" -maxdepth 3 -type d -ls
+          else
+            echo "Directory ${env.RENV_LIB_DIR}/library/ does not exist!"
+          fi
+        shell: bash
+    
+      - name: Recursively explore from root if renv folder is not found
+        if: failure() # This step will only run if the previous steps failed
+        run: |
+          echo "Recursively exploring directory from root to find renv folder:"
+          find "${{ inputs.working-dir }}" -type d -name "renv" -ls
+        shell: bash
+
       - name: List installed packages in renv
         run: |
           find "${{ env.RENV_LIB_DIR }}/library/" -maxdepth 3 -type d -ls
