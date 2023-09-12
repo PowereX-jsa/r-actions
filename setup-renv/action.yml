@@ -100,6 +100,10 @@ runs:
           
         shell: Rscript {0}
 
+      - name: Search for renv directory
+        run: |
+          echo "Searching for renv directories..."
+          find / -type d -name "renv" 2>/dev/null
 
       #debug 
       - name: Check root working directory
