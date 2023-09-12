@@ -17,7 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-  
       - name: Check if lockfile exist
         run: |
           FILE=${{ inputs.working-dir }}/renv.lock
@@ -104,6 +103,12 @@ runs:
         run: |
           echo "Searching for renv directories..."
           find / -type d -name "renv" 2>/dev/null
+        shell: bash
+
+      - name: List content of the target renv directory
+        run: |
+          echo "Listing content of /__w/Shiny-apps/Shiny-apps/APIs/DeltaForecastUberModelAPI/renv..."
+          ls -la /__w/Shiny-apps/Shiny-apps/APIs/DeltaForecastUberModelAPI/renv
         shell: bash
         
       #debug 
