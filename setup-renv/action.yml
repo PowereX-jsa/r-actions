@@ -129,7 +129,7 @@ runs:
         shell: bash
     
       - name: Recursively explore from root if renv folder is not found
-        if: failure() # This step will only run if the previous steps failed
+        if: failure()
         run: |
           echo "Recursively exploring directory from root to find renv folder:"
           find "${{ inputs.working-dir }}" -type d -name "renv" -ls
