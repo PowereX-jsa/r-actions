@@ -43,12 +43,18 @@ runs:
       - name: Set up renv dir as env variable
         run: |
           renv_global_lib_path <- renv:::renv_libpaths_resolve(library = NULL)[1]
-
+          cat("Global Library Path: ", renv_global_lib_path, "\n")
+    
           # set global lib dir
           system(paste0("echo 'GLOBAL_LIB_DIR=", renv_global_lib_path, "' >> $GITHUB_ENV"))
-
+    
           # set renv directory as env variable for cache
           system(paste0("echo 'RENV_LIB_DIR=", "${{ inputs.working-dir }}/renv", "' >> $GITHUB_ENV"))
+    
+          # Checking permissions for directories
+          cat("Checking permissions for directories:\n")
+          system("ls -ld $GLOBAL_LIB_DIR")
+          system("ls -ld $RENV_LIB_DIR")
         shell: Rscript {0}
 
       - name: Always upload local cache
