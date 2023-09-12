@@ -19,7 +19,7 @@ runs:
   steps:
 
       - name: Add permissions
-      - run: chmod 777 -R .
+        run: chmod 777 -R .
         shell: bash
   
       - name: Check if lockfile exist
