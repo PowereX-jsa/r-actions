@@ -139,6 +139,7 @@ runs:
         run: |
           echo "Inspecting the root renv directory:"
           ls -la renv
+        shell: bash
 
       - name: Trying to find and list root renv content
         run: |
@@ -148,6 +149,7 @@ runs:
               echo "Directory renv/library/ does not exist in the root!"
               exit 1
           fi
+        shell: bash
 
       - name: List installed packages in renv
         run: |
