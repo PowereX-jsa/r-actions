@@ -17,10 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-
-      - name: Add permissions
-        run: chmod 777 -R .
-        shell: bash
   
       - name: Check if lockfile exist
         run: |
