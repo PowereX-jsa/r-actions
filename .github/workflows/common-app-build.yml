@@ -17,7 +17,7 @@ on:
       renv-version:
         required: false
         type: string
-        default: 0.17.3
+        default: 0.14.0
       install-package-command:
         required: false
         type: string
@@ -72,19 +72,6 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
-      - name: Check renv library path and its symlink status
-        run: |
-          RENV_PATH=$(Rscript -e "cat(renv:::renv_paths_library())")
-          echo "Renv Library Path: $RENV_PATH"
-          
-          if [[ -L "$RENV_PATH" ]]; then
-            echo "It's a symlink!"
-          else
-            echo "Not a symlink."
-          fi
-          echo "Contents of the renv library path:"
-          ls -la $RENV_PATH
-
       # building docker images
       - name: Set docker tag
         run: |
@@ -105,7 +92,6 @@ jobs:
           repo: ${{ inputs.docker-repo }}
           region: eu-central-1
           tags: ${{ env.TAG }}
-          extra_build_args: "--build-arg GITHUB_PAT=${{ secrets.ACCESS_TOKEN_GITHUB }}"
           dockerfile: "${{ inputs.working-directory }}/Dockerfile"
           create_repo: false
           set_repo_policy: false
