@@ -27,7 +27,7 @@ jobs:
   common-r-api-build:
     runs-on: ubuntu-latest
     container:
-      image: powerex/pwx-r:test-deploy_4.3.1
+      image: powerex/pwx-r:4.3.1
     env:
       GITHUB_PAT: "${{ secrets.ACCESS_TOKEN_GITHUB }}"
     defaults:
@@ -43,7 +43,7 @@ jobs:
           set-safe-directory: true
 
       - name: Initialize global renv
-        uses: PowereX-jsa/r-actions/setup-renv@4.3.1
+        uses: PowereX-jsa/r-actions/setup-renv@master
         with:
           working-dir: ${{ inputs.working-directory }}
           renv-version: ${{ inputs.renv-version }}
