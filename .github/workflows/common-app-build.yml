@@ -22,12 +22,16 @@ on:
         required: false
         type: string
         default: echo "no command"
+      r-image:
+        required: false
+        type: string
+        default: "powerex/pwx-r:4.1.2"
       
 jobs:
   common-r-api-build:
     runs-on: ubuntu-latest
     container:
-      image: powerex/pwx-r:4.3.1
+      image: ${{ inputs.r-image }}
     env:
       GITHUB_PAT: "${{ secrets.ACCESS_TOKEN_GITHUB }}"
     defaults:
