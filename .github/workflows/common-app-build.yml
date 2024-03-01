@@ -88,7 +88,7 @@ jobs:
         run: |
           echo "going to use following tag for docker image: ${{ env.TAG }}"
       - name: Docker build and push
-        uses: kciter/aws-ecr-action@v3
+        uses: kciter/aws-ecr-action@1f94dd889fe5f4ba2016d5573ddfe8238db2af77
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
