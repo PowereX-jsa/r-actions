@@ -76,6 +76,9 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
+      - name: Check AWS CLI version
+        run: aws --version
+        
       # building docker images
       - name: Set docker tag
         run: |
@@ -88,7 +91,7 @@ jobs:
         run: |
           echo "going to use following tag for docker image: ${{ env.TAG }}"
       - name: Docker build and push
-        uses: kciter/aws-ecr-action@1f94dd889fe5f4ba2016d5573ddfe8238db2af77
+        uses: kciter/aws-ecr-action@master
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
