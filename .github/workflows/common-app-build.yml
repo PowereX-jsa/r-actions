@@ -76,6 +76,17 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
+      - name: Pre-check Docker and AWS CLI environment
+        run: |
+          echo "List Docker images currently available:"
+          docker images
+          echo "Check AWS CLI version:"
+          aws --version || echo "AWS CLI not found"
+          echo "Listing contents of the working directory:"
+          ls -lah ${{ inputs.working-directory }}
+          echo "Display Dockerfile content:"
+          cat ${{ inputs.working-directory }}/Dockerfile || echo "Dockerfile not found"
+
       # building docker images
       - name: Set docker tag
         run: |
