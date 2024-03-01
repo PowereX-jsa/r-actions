@@ -76,17 +76,6 @@ jobs:
         with:
           test-dir: ${{ inputs.working-directory }}/tests/testthat
 
-      - name: Pre-check Docker and AWS CLI environment
-        run: |
-          echo "List Docker images currently available:"
-          docker images
-          echo "Check AWS CLI version:"
-          aws --version || echo "AWS CLI not found"
-          echo "Listing contents of the working directory:"
-          ls -lah ${{ inputs.working-directory }}
-          echo "Display Dockerfile content:"
-          cat ${{ inputs.working-directory }}/Dockerfile || echo "Dockerfile not found"
-
       # building docker images
       - name: Set docker tag
         run: |
@@ -99,7 +88,7 @@ jobs:
         run: |
           echo "going to use following tag for docker image: ${{ env.TAG }}"
       - name: Docker build and push
-        uses: kciter/aws-ecr-action@master
+        uses: kciter/aws-ecr-action@v4
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
